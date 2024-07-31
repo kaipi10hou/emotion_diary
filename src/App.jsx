@@ -10,19 +10,19 @@ import {createContext, useReducer, useRef} from "react";
 const mockData = [
     {
         id: 1,
-        createdDate: new Date("2024-07-29"),
+        createdDate: new Date("2024-07-29").getTime(),
         emotionId: 1,
         content: "1번 일기 내용",
     },
     {
         id: 2,
-        createdDate: new Date("2024-07-28"),
+        createdDate: new Date("2024-07-28").getTime(),
         emotionId: 2,
         content: "2번 일기 내용",
     },
     {
         id: 3,
-        createdDate: new Date("2024-06-28"),
+        createdDate: new Date("2024-06-28").getTime(),
         emotionId: 3,
         content: "3번 일기 내용",
     },
@@ -33,13 +33,10 @@ function reducer(state, action) {
         case "CREATE":
            return [action.data, ...state];
         case "UPDATE":
-            return state.map((item) =>{
-                    console.log('reducer 업데이트 :',item.id, action.data.id)
-
-                    return String(item.id) === String(action.data.id)
-                        ? action.data
-                        : item
-            }
+            return state.map((item) =>
+               String(item.id) === String(action.data.id)
+                    ? action.data
+                    : item
             )
         case "DELETE":
             return state.filter((item) => String(item.id) !== String(action.data))
@@ -70,12 +67,11 @@ function App() {
     }
 
     const onUpdate = (id, createdDate, emotionId, content) => {
-        console.log('업데이트 호출',id, createdDate, emotionId, content)
         dispatch({
             "type": "UPDATE",
             "data": {
                 id: id,
-                createdDate: createdDate,
+                createdData: createdDate,
                 emotionId: emotionId,
                 content: content,
             }

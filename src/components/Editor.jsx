@@ -42,12 +42,12 @@ const getStatringedDate = (targetDate) => {
 
     return `${year}-${month}-${date}`
 }
-const Editor = ({diary, onUpdate, onSubmit}) => {
+const Editor = ({onSubmit}) => {
     const nav = useNavigate()
     const [input, setInput] = useState({
-        createdDate : new Date(diary.createdDate) || new Date(),
-        emotionId: diary.emotionId || 3,
-        content: diary.content || "",
+        createdDate : new Date(),
+        emotionId: 3,
+        content: "",
     })
 
     const onChangeInput = (e) => {
@@ -65,14 +65,7 @@ const Editor = ({diary, onUpdate, onSubmit}) => {
     }
 
     const onSubmitClick = () => {
-        if (onUpdate) {
-            onUpdate(diary.id, input.createdDate, input.emotionId, input.content)
-            nav(-1)
-        }
-
-        if (onSubmit) {
-            onSubmit(input)
-        }
+        onSubmit(input);
     }
 
     return (

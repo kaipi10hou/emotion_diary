@@ -5,22 +5,17 @@ import {useContext, useState} from "react";
 import {DiaryStateContext} from "../App.jsx";
 
 const getMonthlyData = (pivotDate, data) => {
-    console.log(`겟 먼스리 데이타 : ${JSON.stringify(data)}`)
     const beginTime = new Date(pivotDate.getFullYear(), pivotDate.getMonth(), 1, 0, 0, 0).getTime();
     const endTime = new Date(pivotDate.getFullYear(), pivotDate.getMonth() + 1, 0, 23, 59, 59).getTime();
     return data.filter(
-        (item) => {
-            console.log(beginTime, item.createdDate)
-            return beginTime <= item.createdDate
-                    && item.createdDate <= endTime
-
-        }
+        (item) =>
+        beginTime <= item.createdDate
+        && item.createdDate <= endTime
     );
 }
 
 const Home = () => {
     const data = useContext(DiaryStateContext)
-    console.log(JSON.stringify(data))
 
     const [pivotDate, setPivotDate] = useState(new Date());
     const year = pivotDate.getFullYear();  // 연도 추출
@@ -28,7 +23,6 @@ const Home = () => {
     const formattedDate = `${year}년 ${month + 1}월`;
 
     const monthlyData = getMonthlyData(pivotDate, data)
-    console.log(monthlyData)
 
     const onIncreaseMonth = () => {
         setPivotDate(new Date(year, month + 1));
