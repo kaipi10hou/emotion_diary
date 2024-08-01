@@ -9,8 +9,13 @@ const getMonthlyData = (pivotDate, data) => {
     const endTime = new Date(pivotDate.getFullYear(), pivotDate.getMonth() + 1, 0, 23, 59, 59).getTime();
     return data.filter(
         (item) =>
-        beginTime <= item.createdDate
-        && item.createdDate <= endTime
+        {
+            console.log(`beginTime : ${beginTime} ===> ${new Date(beginTime)}`)
+            console.log(`item.createdDate ${item.createdDate} ====> ${new Date(item.createDate)}`)
+            console.log(`beginTime <= item.createdDate ${beginTime <= item.createdDate}`)
+            return beginTime <= item.createdDate
+            && item.createdDate <= endTime
+        }
     );
 }
 
