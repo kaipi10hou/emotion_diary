@@ -4,10 +4,12 @@ import Button from "../components/Button.jsx"
 import Viewer from "../components/Viewer.jsx";
 import useDiary from "../hooks/useDiary.jsx";
 import {getStringedDate} from "../util/get-stringed-date.js";
+import usePageTitle from "../hooks/usePageTitle.jsx";
 
 const Diary = () => {
     const params = useParams()
     const nav = useNavigate()
+    usePageTitle(`${params.id}번 일기`)
 
     const curDiaryItem = useDiary(params.id)
 
