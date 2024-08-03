@@ -8,40 +8,41 @@ import Edit from "./page/Edit.jsx"
 import {createContext, useReducer, useRef} from "react";
 
 const mockData = [
-    // {
-    //     id: 1,
-    //     createdDate: new Date("2024-07-11").getTime(),
-    //     emotionId: 1,
-    //     content: "1번 일기 내용",
-    // },
+    {
+        id: 1,
+        createdDate: new Date("2024-07-11").getTime(),
+        emotionId: 1,
+        content: "1번 일기 내용",
+    },
     {
         id: 2,
         createdDate: new Date("2024-08-01").getTime(),
         emotionId: 2,
         content: "2번 일기 내용",
     },
-    // {
-    //     id: 3,
-    //     createdDate: new Date("2024-07-28").getTime(),
-    //     emotionId: 3,
-    //     content: "3번 일기 내용",
-    // },
+    {
+        id: 3,
+        createdDate: new Date("2024-07-28").getTime(),
+        emotionId: 3,
+        content: "3번 일기 내용",
+    },
 ]
 
 function reducer(state, action) {
     switch (action.type) {
         case "CREATE":
-           return [action.data, ...state];
+            return [action.data, ...state];
         case "UPDATE":
             return state.map((item) =>
-               String(item.id) === String(action.data.id)
+                String(item.id) === String(action.data.id)
                     ? action.data
                     : item
             )
         case "DELETE":
             return state.filter((item) => String(item.id) !== String(action.data))
+        default:
+            return state
     }
-    return state;
 }
 
 export const DiaryStateContext = createContext()
@@ -52,7 +53,6 @@ function App() {
     const [data, dispatch] = useReducer(reducer, mockData);
 
     const idRef = useRef(3);
-
 
     const onCreate = (createdDate, emotionId, content) => {
         dispatch({
