@@ -10,9 +10,6 @@ const getMonthlyData = (pivotDate, data) => {
     return data.filter(
         (item) =>
         {
-            console.log(`beginTime : ${beginTime} ===> ${new Date(beginTime)}`)
-            console.log(`item.createdDate ${item.createdDate} ====> ${new Date(item.createDate)}`)
-            console.log(`beginTime <= item.createdDate ${beginTime <= item.createdDate}`)
             return beginTime <= item.createdDate
             && item.createdDate <= endTime
         }

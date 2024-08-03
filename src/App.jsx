@@ -5,9 +5,11 @@ import Diary from "./page/Diary.jsx";
 import New from "./page/New.jsx";
 import NotFound from "./page/NotFound.jsx";
 import Edit from "./page/Edit.jsx"
-import {createContext, useReducer, useRef} from "react";
+import {createContext, useEffect, useReducer, useRef, useState} from "react";
 
-const mockData = [
+const DIARY_LIST = "diaryList"
+
+/*const mockData = [
     {
         id: 1,
         createdDate: new Date("2024-07-11").getTime(),
@@ -26,23 +28,33 @@ const mockData = [
         emotionId: 3,
         content: "3번 일기 내용",
     },
-]
+]*/
 
 function reducer(state, action) {
+    let nextState
     switch (action.type) {
-        case "CREATE":
-            return [action.data, ...state];
-        case "UPDATE":
-            return state.map((item) =>
+        case "INIT": return action.data
+        case "CREATE": {
+            nextState = [action.data, ...state];
+            break
+        }
+        case "UPDATE": {
+            nextState = state.map((item) =>
                 String(item.id) === String(action.data.id)
                     ? action.data
                     : item
             )
-        case "DELETE":
-            return state.filter((item) => String(item.id) !== String(action.data))
+            break
+        }
+        case "DELETE": {
+            nextState = state.filter((item) => String(item.id) !== String(action.data))
+            break
+        }
         default:
             return state
     }
+    localStorage.setItem(DIARY_LIST, JSON.stringify(nextState))
+    return nextState
 }
 
 export const DiaryStateContext = createContext()
@@ -50,9 +62,42 @@ export const DiaryDispatchContext = createContext()
 
 
 function App() {
-    const [data, dispatch] = useReducer(reducer, mockData);
+    const [data, dispatch] = useReducer(reducer, []);
+    const [isLoading, setIsLoading] = useState(true)
 
-    const idRef = useRef(3);
+    const idRef = useRef(1);
+
+    useEffect(() => {
+        const dataString = localStorage.getItem(DIARY_LIST)
+
+        let dataJson
+        try {
+            dataJson = JSON.parse(dataString)
+        } catch (e) {
+            setIsLoading(false)
+            return
+        }
+
+        if (!Array.isArray(dataJson)) {
+            setIsLoading(false)
+            return;
+        }
+
+        let maxId = 0;
+        dataJson.forEach((item) => {
+            if (Number(item.id) > maxId) {
+                maxId = Number(item.id)
+            }
+        })
+        idRef.current = maxId + 1
+        dispatch({
+            "type": "INIT",
+            "data": dataJson,
+        });
+
+        setIsLoading(false)
+    }, []);
+
 
     const onCreate = (createdDate, emotionId, content) => {
         dispatch({
@@ -85,6 +130,10 @@ function App() {
         })
     }
 
+    if (isLoading) {
+        return <div>데이터 로딩중입니다...</div>
+    }
+
     return (
         <>
             <DiaryStateContext.Provider value={data}>
@@ -99,7 +148,7 @@ function App() {
                 </DiaryDispatchContext.Provider>
             </DiaryStateContext.Provider>
         </>
-    )
+    );
 }
 
 export default App
